@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harshal Randhire — UX/UI Designer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;600&display=swap">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['DM Sans', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#0c0a09',
+              border: '#292524',
+              orange: '#ff6403',
+              text: '#f5f5f4',
+              muted: '#a8a29e',
+              warm: '#ffc682',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #0c0a09; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-link {
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #f5f5f4;
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover { color: #f5f5f4; }
+    .nav-link:hover::after { width: 100%; }
+
+    .section-divider { border-bottom: 1px solid #292524; }
+
+    .img-placeholder {
+      background-color: rgba(231, 229, 228, 0.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #57534e;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      padding: 16px;
+    }
+
+    /* Project card */
+    .project-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid #292524;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .project-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+    .project-card-featured {
+      background: rgba(255,100,3,0.04);
+      border-color: rgba(255,100,3,0.2);
+    }
+    .project-card-featured:hover {
+      border-color: rgba(255,100,3,0.4);
+      background: rgba(255,100,3,0.07);
+    }
+
+    /* Tag pill */
+    .tag-pill {
+      background: rgba(255,255,255,0.1);
+      border-radius: 1000px;
+      padding: 2px 14px;
+      font-size: 12px;
+      line-height: 28px;
+      font-weight: 500;
+      color: #f5f5f4;
+      transition: background 0.2s;
+    }
+    .tag-pill:hover { background: rgba(255,255,255,0.18); }
+
+    /* About avatar placeholder */
+    .avatar-placeholder {
+      background: linear-gradient(135deg, #292524, #44403c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a8a29e;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    /* Contact link */
+    .contact-link {
+      border-bottom: 1px solid #44403c;
+      padding-bottom: 1px;
+      transition: color 0.2s, border-color 0.2s;
+      color: #f5f5f4;
+    }
+    .contact-link:hover {
+      color: #ff6403;
+      border-color: #ff6403;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0c0a09; }
+    ::-webkit-scrollbar-thumb { background: #292524; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-brand-bg text-brand-muted font-sans">
+
+  <!-- Fixed Nav -->
+  <div class="w-full fixed top-0 left-0 right-0 z-50">
+    <nav class="h-[60px] bg-brand-bg flex items-center justify-center px-5 section-divider">
+      <div class="w-full max-w-[800px] flex items-center justify-between gap-5">
+        <a href="index.html" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-full bg-[#292524] flex items-center justify-center text-brand-text font-medium text-sm flex-shrink-0">H</div>
+          <span class="text-base font-medium text-brand-text">Harshal Randhire</span>
+        </a>
+        <div class="flex items-center gap-6 text-sm text-brand-muted">
+          <a href="#about" class="nav-link">About</a>
+          <a href="#work" class="nav-link">Work</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <div class="w-full flex flex-col items-center">
+
+    <!-- Hero Section -->
+    <section class="w-full bg-brand-bg flex flex-col items-center pt-[60px] relative overflow-hidden">
+      <div class="h-[120px] w-full"></div>
+      <div class="w-full max-w-[840px] px-5 flex flex-col gap-8 z-10">
+
+        <!-- Eyebrow -->
+        <div class="flex items-center gap-3 reveal">
+          <div class="w-2 h-2 rounded-full bg-brand-orange"></div>
+          <span class="text-[13px] text-brand-muted font-medium">Available for new projects</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="text-[56px] leading-[1.05] font-medium text-brand-text tracking-[-1.2px] reveal" style="transition-delay:0.08s">
+          I design products<br>
+          <span class="text-brand-muted">people don't have to think about.</span>
+        </h1>
+
+        <!-- Sub -->
+        <p class="text-[20px] leading-[28px] text-brand-muted max-w-[600px] reveal" style="transition-delay:0.16s">
+          Senior UX/UI Designer with 6+ years turning complex systems into interfaces that feel obvious. Fintech, enterprise, consumer — I work across the stack.
+        </p>
+
+        <!-- CTA row -->
+        <div class="flex items-center gap-4 reveal" style="transition-delay:0.24s">
+          <a href="#work" class="bg-brand-text text-brand-bg px-6 py-3 rounded-full text-[15px] font-medium transition-opacity hover:opacity-80">View my work</a>
+          <a href="#contact" class="text-brand-muted text-[15px] font-medium nav-link">Get in touch</a>
+        </div>
+
+        <!-- Tagline badges -->
+        <div class="flex flex-wrap gap-2 pt-4 reveal" style="transition-delay:0.32s">
+          <span class="tag-pill">Fintech</span>
+          <span class="tag-pill">Enterprise</span>
+          <span class="tag-pill">Design Systems</span>
+          <span class="tag-pill">UX Research</span>
+          <span class="tag-pill">Prototyping</span>
+        </div>
+      </div>
+      <div class="h-[120px] w-full section-divider relative">
+        <div class="absolute inset-0 section-divider"></div>
+      </div>
+    </section>
+
+    <!-- Work Section -->
+    <section id="work" class="w-full bg-brand-bg flex flex-col items-center">
+      <div class="h-[80px] w-full"></div>
+      <div class="w-full max-w-[840px] px-5 flex flex-col gap-12">
+
+        <!-- Section label -->
+        <div class="flex flex-col gap-2 reveal">
+          <p class="text-[12.8px] font-medium uppercase tracking-[0.64px] text-brand-orange">Selected work</p>
+          <h2 class="text-[36px] font-medium leading-[43.2px] tracking-[-0.36px] text-brand-text">Case studies</h2>
+        </div>
+
+        <!-- Featured case study card -->
+        <a href="case-study_7.html" class="project-card project-card-featured flex flex-col reveal">
+          <!-- Card image area -->
+          <div class="w-full h-[320px] img-placeholder rounded-t-[20px] rounded-b-none" style="background: rgba(255,100,3,0.06); border-radius: 20px 20px 0 0;">
+            <span class="text-brand-muted">Hero image — PPFAS Partners — replace with Figma export</span>
+          </div>
+          <!-- Card content -->
+          <div class="p-8 flex flex-col gap-4">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="tag-pill" style="background: rgba(255,100,3,0.15); color: #ff6403;">Featured</span>
+              <span class="tag-pill text-[11px]">PPFAS Partners</span>
+              <span class="tag-pill text-[11px]">Feature Design</span>
+              <span class="tag-pill text-[11px]">Web App</span>
+              <span class="tag-pill text-[11px]">7 min</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <h3 class="text-[28px] font-medium leading-[1.2] tracking-[-0.4px] text-brand-text">
+                Giving distributors a login that works when networks don't
+              </h3>
+              <p class="text-[17px] leading-[26px] text-brand-muted">
+                Three distributors raised the same quiet complaint. I turned it into a feature that gave them a faster, offline-capable login — without changing a single thing the other users depended on.
+              </p>
+            </div>
+            <div class="flex items-center gap-1 text-[13px] text-brand-orange font-medium mt-1">
+              <span>Read case study</span>
+              <span>→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 3 dummy project cards -->
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3 reveal" style="transition-delay:0.1s">
+
+          <!-- Dummy 1 -->
+          <a href="#" class="project-card flex flex-col">
+            <div class="w-full h-[180px] img-placeholder rounded-t-[20px] rounded-b-none" style="border-radius:20px 20px 0 0; background:rgba(255,255,255,0.05)">
+              <span>Project image</span>
+            </div>
+            <div class="p-5 flex flex-col gap-3">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="tag-pill text-[10px]" style="padding:1px 10px">Google</span>
+                <span class="tag-pill text-[10px]" style="padding:1px 10px">Enterprise UX</span>
+              </div>
+              <h3 class="text-[18px] font-medium leading-[1.3] text-brand-text">Building a new enterprise UX org</h3>
+              <p class="text-[14px] leading-[22px] text-brand-muted">Establishing design culture and tooling for a 200-person product team from scratch.</p>
+              <span class="text-[12px] text-brand-muted mt-1">4 min read →</span>
+            </div>
+          </a>
+
+          <!-- Dummy 2 -->
+          <a href="#" class="project-card flex flex-col">
+            <div class="w-full h-[180px] img-placeholder rounded-t-[20px] rounded-b-none" style="border-radius:20px 20px 0 0; background:rgba(255,255,255,0.05)">
+              <span>Project image</span>
+            </div>
+            <div class="p-5 flex flex-col gap-3">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="tag-pill text-[10px]" style="padding:1px 10px">IRC</span>
+                <span class="tag-pill text-[10px]" style="padding:1px 10px">Crisis Response</span>
+              </div>
+              <h3 class="text-[18px] font-medium leading-[1.3] text-brand-text">Designing a global crisis response platform</h3>
+              <p class="text-[14px] leading-[22px] text-brand-muted">Coordinating emergency logistics across 40 countries in a single unified interface.</p>
+              <span class="text-[12px] text-brand-muted mt-1">11 min read →</span>
+            </div>
+          </a>
+
+          <!-- Dummy 3 -->
+          <a href="#" class="project-card flex flex-col">
+            <div class="w-full h-[180px] img-placeholder rounded-t-[20px] rounded-b-none" style="border-radius:20px 20px 0 0; background:rgba(255,255,255,0.05)">
+              <span>Project image</span>
+            </div>
+            <div class="p-5 flex flex-col gap-3">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="tag-pill text-[10px]" style="padding:1px 10px">Fintech</span>
+                <span class="tag-pill text-[10px]" style="padding:1px 10px">Mobile</span>
+              </div>
+              <h3 class="text-[18px] font-medium leading-[1.3] text-brand-text">Redesigning the mutual fund onboarding flow</h3>
+              <p class="text-[14px] leading-[22px] text-brand-muted">Reducing a 14-step KYC process to 6 without cutting a single compliance requirement.</p>
+              <span class="text-[12px] text-brand-muted mt-1">8 min read →</span>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+      <div class="h-[80px] w-full section-divider relative mt-16">
+        <div class="absolute inset-0 section-divider"></div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="w-full bg-brand-bg flex flex-col items-center">
+      <div class="h-[80px] w-full"></div>
+      <div class="w-full max-w-[840px] px-5 flex flex-col gap-12">
+
+        <div class="flex flex-col gap-2 reveal">
+          <p class="text-[12.8px] font-medium uppercase tracking-[0.64px] text-brand-orange">About</p>
+          <h2 class="text-[36px] font-medium leading-[43.2px] tracking-[-0.36px] text-brand-text">The person behind the work</h2>
+        </div>
+
+        <div class="flex flex-col gap-8 md:flex-row md:items-start md:gap-16 reveal">
+          <!-- Avatar placeholder -->
+          <div class="avatar-placeholder w-[100px] h-[100px] flex-shrink-0">H</div>
+
+          <div class="flex flex-col gap-5">
+            <p class="text-[20px] leading-[28px]">
+              I'm Harshal — a UX/UI designer focused on systems that carry real weight. Financial platforms, enterprise tools, and anything where the stakes of a bad design decision are measured in someone's actual life.
+            </p>
+            <p class="text-[20px] leading-[28px]">
+              My process starts with understanding the context completely before touching Figma. I map flows, talk to users, and find the structural problems — then design solutions that feel obvious in hindsight.
+            </p>
+            <p class="text-[20px] leading-[28px]">
+              Currently available for contract and full-time opportunities.
+            </p>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="tag-pill">Figma</span>
+              <span class="tag-pill">User Research</span>
+              <span class="tag-pill">Design Systems</span>
+              <span class="tag-pill">Prototyping</span>
+              <span class="tag-pill">Accessibility</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="h-[80px] w-full section-divider relative mt-16">
+        <div class="absolute inset-0 section-divider"></div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="w-full bg-brand-bg flex flex-col items-center">
+      <div class="h-[100px] w-full"></div>
+      <div class="w-full max-w-[840px] px-5 flex flex-col gap-10">
+
+        <div class="flex flex-col gap-4 reveal">
+          <p class="text-[12.8px] font-medium uppercase tracking-[0.64px] text-brand-orange">Contact</p>
+          <h2 class="text-[48px] font-medium leading-[1.1] tracking-[-0.96px] text-brand-text">
+            Let's make something<br>worth looking at.
+          </h2>
+        </div>
+
+        <p class="text-[20px] leading-[28px] max-w-[520px] reveal" style="transition-delay:0.1s">
+          I'm always open to a good brief. If you have a product problem that needs a designer who thinks before they prototype, reach out.
+        </p>
+
+        <div class="flex flex-col gap-4 reveal" style="transition-delay:0.2s">
+          <a href="mailto:harshal@example.com" class="contact-link text-[20px] font-medium w-fit">harshal@example.com</a>
+          <div class="flex items-center gap-8 pt-2">
+            <a href="#" class="text-brand-muted text-[14px] nav-link">LinkedIn</a>
+            <a href="#" class="text-brand-muted text-[14px] nav-link">Dribbble</a>
+            <a href="#" class="text-brand-muted text-[14px] nav-link">Twitter</a>
+          </div>
+        </div>
+
+      </div>
+      <div class="h-[80px] w-full"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full bg-brand-bg section-divider" style="border-top: 1px solid #292524;">
+      <div class="max-w-[840px] mx-auto px-5 py-8 flex items-center justify-between">
+        <span class="text-[13px] text-brand-muted">© 2026 Harshal Randhire</span>
+        <div class="flex items-center gap-6 text-[13px] text-brand-muted">
+          <a href="#work" class="nav-link">Work</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    document.querySelectorAll('section').forEach(sec => {
+      sec.querySelectorAll('.reveal').forEach((el, i) => {
+        if (!el.style.transitionDelay) {
+          el.style.transitionDelay = (i * 0.08) + 's';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
