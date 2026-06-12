@@ -141,6 +141,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .prose h3{font-weight:500;letter-spacing:-.01em;font-size:1.08rem;margin:34px 0 10px}
 .prose p{color:var(--muted);font-weight:300;font-size:1rem;max-width:62ch;margin-bottom:18px}
 .prose p strong{color:var(--ink);font-weight:500}
+.shot{margin:34px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);transition:border-color .45s var(--ease)}
+.shot img{width:100%;display:block}
+html[data-theme="dark"] .shot img{filter:brightness(.88)}
 .ph{border:1px dashed var(--line);border-radius:12px;background:var(--surface);aspect-ratio:16/9;display:grid;place-items:center;font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--faint);margin:34px 0;transition:background .45s var(--ease),border-color .45s var(--ease)}
 .ph.short{aspect-ratio:21/9}
 .flow{font-family:'Geist Mono',monospace;font-size:.78rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin:14px 0 26px;line-height:2;transition:background .45s var(--ease),border-color .45s var(--ease)}
@@ -239,7 +242,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     replacement. That made the direction clearer. My focus from there was entirely on the user side:
     making setup feel non-technical, and making sure people who never asked for this wouldn't notice
     anything changed.</p>
-    <div class="ph">Method selection — Authenticator · SMS · Email</div>
+    <figure class="shot"><img src="ui/auth-4-login-method.png" alt="Login screen — choose verification method: authenticator app, SMS, or email" loading="lazy"></figure>
   </div>
 </section>
 
@@ -279,7 +282,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="iter">
       <span class="tag">V1 — First attempt</span>
       <h3>Jumped straight to the QR code</h3>
-      <div class="ph short">Screen placeholder — V1</div>
+      <figure class="shot"><img src="ui/auth-v1-qr-no-context.png" alt="V1 — QR code shown immediately with no download guidance" loading="lazy"></figure>
       <span class="lbl">Problem</span>
       <p>The QR code appeared with nothing telling the user what to do before they got there. If they
       hadn't downloaded an authenticator app yet, they were just stuck — staring at a code with no
@@ -289,7 +292,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="iter">
       <span class="tag">V2 — Revised</span>
       <h3>Added a full page for the download step</h3>
-      <div class="ph short">Screen placeholder — V2</div>
+      <figure class="shot"><img src="ui/auth-v2-download-page.png" alt="V2 — a full separate page for the download step, which broke the flow" loading="lazy"></figure>
       <span class="lbl">Problem</span>
       <p>A separate page broke the flow. Users navigated away to download the app, and when they came
       back they'd lost track of where they were. Some had to restart entirely. It fixed one problem
@@ -299,7 +302,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="iter">
       <span class="tag">Final — Shipped</span>
       <h3>Modal overlay keeps the user in context</h3>
-      <div class="ph short">Screen placeholder — Final</div>
+      <figure class="shot"><img src="ui/auth-2-download-modal.png" alt="Final — download guidance in a modal, settings page visible behind" loading="lazy"></figure>
       <span class="lbl">Why this worked</span>
       <p>Putting the download guidance in a lightweight modal kept the settings page visible behind it.
       The user never lost their place. I also added the manual secret key below the QR code so users
@@ -315,20 +318,20 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <p>Everything used the existing component library — same spacing, same typography, same patterns.
     The goal was for this to feel like it had always been there, not something added later.</p>
 
-    <div class="ph">Manage 2FA screen</div>
+    <figure class="shot"><img src="ui/auth-1-manage-2fa.png" alt="Manage 2FA settings — both methods on one page with an Active badge" loading="lazy"></figure>
     <h3>Managing 2FA — both methods, same page</h3>
     <p>Both options sit on the same settings page with clear separation. Neither is pre-selected — the
     user chooses when they're ready. An "Active" badge shows which method is live, so there's never
     confusion about their security state. Going back to SMS is always right there.</p>
 
-    <div class="ph">Download modal</div>
+    <figure class="shot"><img src="ui/auth-2-download-modal.png" alt="Download prompt modal with three authenticator app options" loading="lazy"></figure>
     <h3>Download prompt — modal, not a new page</h3>
     <p>The download guidance appears as a modal overlay with the settings page visible behind it.
     Three app options are listed — Google Authenticator, Authy, Microsoft Authenticator — so it works
     with whatever the user already has. A quiet note recommends cloud backup, addressing "what if I
     lose my phone" without making it feel alarming.</p>
 
-    <div class="ph">QR code screen</div>
+    <figure class="shot"><img src="ui/auth-3-qr-setup.png" alt="QR code setup with manual secret key fallback and MPIN + code verification" loading="lazy"></figure>
     <h3>QR code — with a fallback built in</h3>
     <p>The QR code is the primary path, with the manual secret key right below it for anyone whose
     camera isn't working. Setup completes only after entering both MPIN and the 6-digit code — confirming

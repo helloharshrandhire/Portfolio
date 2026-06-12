@@ -141,6 +141,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .prose h3{font-weight:500;letter-spacing:-.01em;font-size:1.08rem;margin:34px 0 10px}
 .prose p{color:var(--muted);font-weight:300;font-size:1rem;max-width:62ch;margin-bottom:18px}
 .prose p strong{color:var(--ink);font-weight:500}
+.shot{margin:34px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);transition:border-color .45s var(--ease)}
+.shot img{width:100%;display:block}
+html[data-theme="dark"] .shot img{filter:brightness(.88)}
 .ph{border:1px dashed var(--line);border-radius:12px;background:var(--surface);aspect-ratio:16/9;display:grid;place-items:center;font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--faint);margin:34px 0;transition:background .45s var(--ease),border-color .45s var(--ease)}
 .ph.short{aspect-ratio:21/9}
 .flow{font-family:'Geist Mono',monospace;font-size:.78rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin:14px 0 26px;line-height:2;transition:background .45s var(--ease),border-color .45s var(--ease)}
@@ -302,23 +305,23 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <h2>Five steps. Every decision intentional.</h2>
     <div class="step">
       <span class="n">Step 1</span>
-      <div><h3>Personal Details</h3><p>User enters PAN — name fetches automatically from KRA. No retyping what the system already knows. "Mobile belongs to" handles joint and family accounts. Four fields. Done.</p><div class="ph short">Step 1 — screen</div></div>
+      <div><h3>Personal Details</h3><p>User enters PAN — name fetches automatically from KRA. No retyping what the system already knows. "Mobile belongs to" handles joint and family accounts. Four fields. Done.</p><figure class="shot"><img src="ui/folio-step-1-personal.png" alt="Step 1 — Personal details: PAN with auto-fetched name, four fields total" loading="lazy"></figure></div>
     </div>
     <div class="step">
       <span class="n">Step 2</span>
-      <div><h3>About You</h3><p>Previous step's data shown as chips at top — the user always sees what they've told us. FATCA is a single Yes/No inline question; if No, they skip it entirely. Only relevant users ever see the extra fields.</p><div class="ph short">Step 2 — screen</div></div>
+      <div><h3>About You</h3><p>Previous step's data shown as chips at top — the user always sees what they've told us. FATCA is a single Yes/No inline question; if No, they skip it entirely. Only relevant users ever see the extra fields.</p><figure class="shot"><img src="ui/folio-step-2-about-you.png" alt="Step 2 — About you: previous data as chips, inline FATCA yes/no" loading="lazy"></figure></div>
     </div>
     <div class="step">
       <span class="n">Step 3</span>
-      <div><h3>Add Nominee</h3><p>"I proceed without a nominee" is pre-checked. The user actively chooses to add one — not forced into it. Nominees can be added after folio creation; now users know that.</p><div class="ph short">Step 3 — screen</div></div>
+      <div><h3>Add Nominee</h3><p>"I proceed without a nominee" is pre-checked. The user actively chooses to add one — not forced into it. Nominees can be added after folio creation; now users know that.</p><figure class="shot"><img src="ui/folio-step-3-nominee.png" alt="Step 3 — Add nominee: proceed-without-nominee pre-checked" loading="lazy"></figure></div>
     </div>
     <div class="step">
       <span class="n">Step 4</span>
-      <div><h3>Add Bank Account</h3><p>The original form had six bank fields. Here: type the IFSC and everything resolves — bank name, city, branch, address. The user only confirms account number and type.</p><div class="ph short">Step 4 — screen</div></div>
+      <div><h3>Add Bank Account</h3><p>The original form had six bank fields. Here: type the IFSC and everything resolves — bank name, city, branch, address. The user only confirms account number and type.</p><figure class="shot"><img src="ui/folio-step-4-bank.png" alt="Step 4 — Add bank account: IFSC-first with auto-resolved bank details" loading="lazy"></figure></div>
     </div>
     <div class="step">
       <span class="n">Step 5</span>
-      <div><h3>Invest</h3><p>Scheme selection appears last — because now it makes sense. Folio exists, bank confirmed, nominee decided. Lumpsum vs SIP comes first because it drives different fields. The final CTA is "Review Form" — one moment of confidence before committing real money.</p><div class="ph short">Step 5 — screen</div></div>
+      <div><h3>Invest</h3><p>Scheme selection appears last — because now it makes sense. Folio exists, bank confirmed, nominee decided. Lumpsum vs SIP comes first because it drives different fields. The final CTA is "Review Form" — one moment of confidence before committing real money.</p><figure class="shot"><img src="ui/folio-step-5-invest.png" alt="Step 5 — Invest: lumpsum vs SIP first, review form CTA" loading="lazy"></figure></div>
     </div>
   </div>
 </section>
