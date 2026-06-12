@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Redesigning Folio Creation — Harshal Randhire</title>
+<meta name="description" content="Redesigning a 9-section compliance form into a guided 5-step flow without removing a single requirement." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+(function(){
+  var t = null;
+  var u = new URLSearchParams(location.search).get('theme');
+  if (u === 'light' || u === 'dark') t = u;
+  if (!t){ try { var s = localStorage.getItem('hr-theme'); if (s === 'light' || s === 'dark') t = s; } catch(e){} }
+  if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+:root{
+  --bg:#FAFAF8; --surface:#FFFFFF; --ink:#1A1A1C; --muted:#73737A;
+  --faint:#A6A6AD; --line:#E7E7E4; --accent:#3D5AFE;
+  --maxw:860px; --ease:cubic-bezier(.22,1,.36,1);
+}
+html[data-theme="dark"]{
+  --bg:#0E0E10; --surface:#161618; --ink:#EDEDEF; --muted:#8E8E96;
+  --faint:#5C5C63; --line:#242428; --accent:#7C90FF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Geist',system-ui,sans-serif; background:var(--bg); color:var(--ink);
+  line-height:1.65; font-size:16px;
+  transition:background .45s var(--ease), color .45s var(--ease);
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#fff}
+.mono{font-family:'Geist Mono',monospace}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px}
+nav{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  transition:background .45s var(--ease), border-color .45s var(--ease);
+}
+.nav-inner{max-width:var(--maxw);margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-weight:600;font-size:.95rem;text-decoration:none;letter-spacing:-.01em}
+.nav-right{display:flex;align-items:center;gap:26px}
+.nav-links{display:flex;gap:26px;list-style:none}
+.nav-links a{text-decoration:none;font-size:.88rem;color:var(--muted);transition:color .25s;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-4px;width:100%;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+.theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--ink);transition:border-color .3s, transform .5s var(--ease)}
+.theme-btn:hover{border-color:var(--muted);transform:rotate(40deg)}
+.theme-btn svg{width:15px;height:15px}
+.icon-moon{display:none}
+html[data-theme="dark"] .icon-sun{display:none}
+html[data-theme="dark"] .icon-moon{display:block}
+.kicker{font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px}
+section{padding:96px 0;border-top:1px solid var(--line);transition:border-color .45s var(--ease)}
+.sec-label{font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--faint);letter-spacing:.12em;text-transform:uppercase;margin-bottom:48px;display:block}
+.lift{opacity:0;transform:translateY(16px);animation:lift .8s var(--ease) forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}.d5{animation-delay:.45s}
+@keyframes lift{to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+footer{padding:32px 0 44px;border-top:1px solid var(--line);font-size:.78rem;color:var(--faint);transition:border-color .45s var(--ease)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .lift,.reveal{opacity:1;transform:none;animation:none;transition:none}
+  .dot{animation:none}
+  *{transition:none!important}
+}
+@media (max-width:640px){
+  section{padding:70px 0}
+  .nav-links{display:none}
+}
+/* ---- UI-mock thumbnails (replace any .mockwrap content with an <img> when real shots are ready) ---- */
+.mockwrap{
+  display:grid;place-items:center;overflow:hidden;
+  border:1px solid var(--line);border-radius:12px;
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%),
+    var(--surface);
+  transition:background .45s var(--ease),border-color .45s var(--ease);
+}
+.mockwrap img{width:100%;height:100%;object-fit:cover;display:block}
+.mock{
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 14px 34px -12px rgba(0,0,0,.18);
+  padding:1.1em 1.2em;width:78%;font-size:10px;line-height:1.45;
+  transition:background .45s var(--ease),border-color .45s var(--ease),transform .5s var(--ease);
+}
+.m-title{font-weight:600;font-size:1.15em;letter-spacing:-.01em;color:var(--ink)}
+.m-sub{color:var(--muted);font-size:.92em;margin:.25em 0 .9em}
+.m-opt{
+  display:flex;gap:.7em;align-items:flex-start;border:1px solid var(--line);
+  border-radius:.6em;padding:.6em .7em;margin-bottom:.5em;
+}
+.m-opt i{width:.9em;height:.9em;border-radius:50%;border:1.5px solid var(--faint);flex:none;margin-top:.15em}
+.m-opt b{display:block;font-weight:500;color:var(--ink);font-size:.95em}
+.m-opt span{color:var(--muted);font-size:.82em}
+.m-opt.sel{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 6%, transparent)}
+.m-opt.sel i{border-color:var(--accent);background:radial-gradient(circle, var(--accent) 40%, transparent 45%)}
+.m-btn{
+  background:var(--ink);color:var(--bg);text-align:center;border-radius:.55em;
+  padding:.55em;font-weight:500;font-size:.95em;margin-top:.8em;
+  transition:background .45s var(--ease),color .45s var(--ease);
+}
+.m-stepper{display:flex;align-items:center;gap:.45em;margin-bottom:.95em}
+.m-stepper span{
+  width:1.7em;height:1.7em;border-radius:50%;display:grid;place-items:center;
+  font-size:.85em;border:1.5px solid var(--line);color:var(--faint);flex:none;
+}
+.m-stepper span.done{border-color:var(--accent);color:var(--accent)}
+.m-stepper span.cur{background:var(--accent);border-color:var(--accent);color:#fff}
+.m-stepper i{flex:1;height:1.5px;background:var(--line)}
+.m-stepper i.done{background:var(--accent)}
+.m-field{height:1.9em;border:1px solid var(--line);border-radius:.5em;margin-bottom:.55em;position:relative}
+.m-field::before{content:"";position:absolute;left:.7em;top:50%;transform:translateY(-50%);width:45%;height:.5em;border-radius:.25em;background:var(--line)}
+.m-field.short::before{width:28%}
+.m-check{display:flex;gap:.6em;align-items:center;margin:.7em 0 .2em;color:var(--muted);font-size:.88em}
+.m-check i{width:.95em;height:.95em;border-radius:.25em;border:1.5px solid var(--accent);background:color-mix(in srgb, var(--accent) 14%, transparent);display:grid;place-items:center;flex:none}
+.m-check i::before{content:"✓";color:var(--accent);font-size:.7em;font-weight:700}
+
+.cs-hero{padding:120px 0 90px}
+.cs-hero h1{font-weight:500;letter-spacing:-.03em;line-height:1.15;font-size:clamp(1.9rem,4.6vw,2.9rem);max-width:24ch}
+.cs-intro{margin-top:28px;max-width:58ch;color:var(--muted);font-size:1.08rem;font-weight:300}
+.cs-note{margin-top:22px;display:inline-block;font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+.cs-hero-visual{margin-top:60px;aspect-ratio:21/10;padding:30px 0}
+.cs-hero-visual .mock{font-size:12px;width:46%;max-width:340px}
+@media (max-width:640px){.cs-hero-visual{aspect-ratio:4/3}.cs-hero-visual .mock{width:80%}}
+.prose h2{font-weight:500;letter-spacing:-.02em;font-size:1.5rem;line-height:1.3;margin-bottom:22px;max-width:26ch}
+.prose h3{font-weight:500;letter-spacing:-.01em;font-size:1.08rem;margin:34px 0 10px}
+.prose p{color:var(--muted);font-weight:300;font-size:1rem;max-width:62ch;margin-bottom:18px}
+.prose p strong{color:var(--ink);font-weight:500}
+.ph{border:1px dashed var(--line);border-radius:12px;background:var(--surface);aspect-ratio:16/9;display:grid;place-items:center;font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--faint);margin:34px 0;transition:background .45s var(--ease),border-color .45s var(--ease)}
+.ph.short{aspect-ratio:21/9}
+.flow{font-family:'Geist Mono',monospace;font-size:.78rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin:14px 0 26px;line-height:2;transition:background .45s var(--ease),border-color .45s var(--ease)}
+.flow b{color:var(--ink);font-weight:500;display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.flow .arrow{color:var(--accent)}
+.iter{border-left:2px solid var(--line);padding:4px 0 4px 26px;margin:30px 0;transition:border-color .3s}
+.iter:hover{border-color:var(--accent)}
+.iter .tag{font-family:'Geist Mono',monospace;font-size:.72rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+.iter h3{margin-top:8px}
+.iter .lbl{font-family:'Geist Mono',monospace;font-size:.7rem;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;display:block;margin:14px 0 4px}
+.numgrid{display:grid;grid-template-columns:1fr 1fr;gap:34px 44px;margin-top:10px}
+.numgrid .item span{font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--accent)}
+.numgrid .item h3{margin:8px 0 6px;font-size:1rem;font-weight:500}
+.numgrid .item p{font-size:.9rem;margin:0}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:30px 0}
+.ba .col{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px;transition:background .45s var(--ease),border-color .45s var(--ease)}
+.ba .col h4{font-family:'Geist Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:500;margin-bottom:14px}
+.ba .col ul{list-style:none}
+.ba .col li{font-size:.86rem;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--line)}
+.ba .col li:last-child{border:none}
+.ba .col.after li{color:var(--ink)}
+.ba .col.after li em{font-style:normal;color:var(--faint);font-size:.78rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin:40px 0 10px}
+.stat b{font-size:2rem;font-weight:500;letter-spacing:-.03em;display:block;line-height:1.1}
+.stat span{font-size:.84rem;color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;list-style:none}
+.tools li{font-family:'Geist Mono',monospace;font-size:.74rem;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted)}
+.steps .step{display:grid;grid-template-columns:64px 1fr;gap:24px;padding:30px 0;border-bottom:1px solid var(--line)}
+.steps .step:last-child{border:none}
+.steps .n{font-family:'Geist Mono',monospace;font-size:.74rem;color:var(--accent);padding-top:4px}
+.steps h3{margin:0 0 8px}
+.steps p{margin-bottom:8px;font-size:.94rem}
+.cs-nav{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:70px 0}
+.cs-nav a{text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:24px 26px;transition:border-color .3s,transform .35s var(--ease);background:var(--surface)}
+.cs-nav a:hover{border-color:var(--accent);transform:translateY(-3px)}
+.cs-nav .dir{font-family:'Geist Mono',monospace;font-size:.7rem;color:var(--faint);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:8px}
+.cs-nav .t{font-weight:500;font-size:1rem;letter-spacing:-.01em}
+.cs-nav a.next{text-align:right}
+@media (max-width:640px){
+  .cs-hero{padding:80px 0 60px}
+  .numgrid,.ba,.cs-nav{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr;gap:22px}
+  .steps .step{grid-template-columns:1fr;gap:6px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">Harshal Randhire</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html#work">Work</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+<header class="cs-hero">
+  <div class="wrap">
+    <p class="kicker lift d1">PPFAS SelfInvest · Web · 0→1 redesign · 8 min read</p>
+    <h1 class="lift d2">A form so long, even I got confused filling it.</h1>
+    <p class="cs-intro lift d3">Folio creation was the first real thing a new investor did on our platform.
+    It was also the most overwhelming. I redesigned it from a 9-section wall into a guided 5-step flow —
+    without removing a single compliance requirement.</p>
+    <span class="cs-note lift d4">In development — not yet live. All screens are from the finalised design.</span>
+    <div class="cs-hero-visual mockwrap lift d5"><div class="mock" aria-hidden="true">
+        <div class="m-stepper"><span class="done">✓</span><i class="done"></i><span class="done">✓</span><i class="done"></i><span class="cur">3</span><i></i><span>4</span><i></i><span>5</span></div>
+        <p class="m-title">Add Nominee</p>
+        <p class="m-sub">Optional — you can add this anytime later</p>
+        <div class="m-field"></div>
+        <div class="m-field short"></div>
+        <div class="m-check"><i></i><span>I proceed without a nominee</span></div>
+        <div class="m-btn">Continue</div>
+      </div></div>
+  </div>
+</header>
+
+<section class="prose">
+  <div class="wrap reveal">
+    <span class="sec-label">Overview</span>
+    <h2>Where this started</h2>
+    <p>I still remember the first time I tried to create a folio on our own platform.
+    <strong>I work here. I know the product. And I was still confused.</strong></p>
+    <p>The form loaded and just kept going. Nine sections, one page, no progress bar — PPFAS Mutual Fund,
+    Applicant Details, Address, FATCA, Investment, Bank, Nominee, eNomination, Payment. The KYC
+    verification auto-filled my name — a moment of relief — and then the full form was still sitting there.</p>
+
+    <div class="ba">
+      <div class="col">
+        <h4>Before — 9 sections, one page</h4>
+        <ul>
+          <li>PPFAS Mutual Fund</li><li>First Applicant's Details</li><li>Address Details</li>
+          <li>FATCA/CRS Information</li><li>Investment Details</li><li>Bank Account Details</li>
+          <li>Nominee Details</li><li>eNomination Details</li><li>Payment Details</li>
+        </ul>
+      </div>
+      <div class="col after">
+        <h4>After — 5 guided steps</h4>
+        <ul>
+          <li>1 · Personal Details <em>— PAN + contact</em></li>
+          <li>2 · About You <em>— FATCA only if relevant</em></li>
+          <li>3 · Add Nominee <em>— optional, clearly stated</em></li>
+          <li>4 · Add Bank Account <em>— IFSC-first, auto-resolved</em></li>
+          <li>5 · Invest <em>— scheme, amount, payment</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>What triggered the project</h3>
+    <p><strong>Play Store reviews</strong> — a few users mentioned the form felt overwhelming. Not a flood,
+    but a pattern. <strong>Internal team members</strong> — our own colleagues invest on the platform and
+    felt it too. <strong>Competitive audit</strong> — other MF platforms had moved to guided step-by-step
+    flows. We hadn't.</p>
+    <p>No formal drop-off data existed — that tooling is being integrated post-launch via Microsoft
+    Clarity. We made a judgment call based on clear signals, not a spreadsheet.</p>
+  </div>
+</section>
+
+<section class="prose">
+  <div class="wrap reveal">
+    <span class="sec-label">What I found</span>
+    <h2>Eight problems I found by being the user</h2>
+    <p>I walked through the old form as a first-time investor — not as the designer who knew every field.</p>
+    <div class="numgrid">
+      <div class="item"><span>01</span><h3>Heading that said nothing</h3><p>"PPFAS Mutual Fund" as a section title. Every other section had a descriptive heading. This one didn't.</p></div>
+      <div class="item"><span>02</span><h3>Scheme selection before folio creation</h3><p>I came to create an account. The form immediately asked which fund I wanted to invest in. Wrong moment.</p></div>
+      <div class="item"><span>03</span><h3>FATCA shown to everyone</h3><p>A compliance question for overseas taxpayers — shown to all users, including those who'd just confirmed they're Indian residents.</p></div>
+      <div class="item"><span>04</span><h3>Form ignored what I told it</h3><p>Chose "Single holder" — three FATCA fields still showed. The form didn't respond to my selection at all.</p></div>
+      <div class="item"><span>05</span><h3>Investment amount mid-folio-creation</h3><p>Creating an account shouldn't ask how much I want to invest. That's a different decision entirely.</p></div>
+      <div class="item"><span>06</span><h3>Nominee felt mandatory</h3><p>Nothing indicated nominees can be added after. Users felt trapped — fill it now or abandon.</p></div>
+      <div class="item"><span>07</span><h3>2FA appeared mid-flow</h3><p>The eNomination / 2FA step appeared out of nowhere in the middle. Jarring security interruption.</p></div>
+      <div class="item"><span>08</span><h3>What just happened?</h3><p>After Pay Now: did I create a folio? Invest? Both? The form never explained what completing it meant.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="prose">
+  <div class="wrap reveal">
+    <span class="sec-label">Approach</span>
+    <h2>Before opening Figma</h2>
+    <p>The instinct was to make it a stepper. The harder question was: <strong>which fields go in which
+    step, and why?</strong> I did a competitive audit first, then sat with my manager and went through
+    every field. For each one: why do we need this, and when does it actually make sense to ask?</p>
+    <div class="flow"><b>Non-negotiable constraint</b>
+    The session timeout had to stay. Financial platform, real money — security isn't negotiable.
+    So each step had to save progress independently.</div>
+  </div>
+</section>
+
+<section class="prose steps">
+  <div class="wrap reveal">
+    <span class="sec-label">Final design</span>
+    <h2>Five steps. Every decision intentional.</h2>
+    <div class="step">
+      <span class="n">Step 1</span>
+      <div><h3>Personal Details</h3><p>User enters PAN — name fetches automatically from KRA. No retyping what the system already knows. "Mobile belongs to" handles joint and family accounts. Four fields. Done.</p><div class="ph short">Step 1 — screen</div></div>
+    </div>
+    <div class="step">
+      <span class="n">Step 2</span>
+      <div><h3>About You</h3><p>Previous step's data shown as chips at top — the user always sees what they've told us. FATCA is a single Yes/No inline question; if No, they skip it entirely. Only relevant users ever see the extra fields.</p><div class="ph short">Step 2 — screen</div></div>
+    </div>
+    <div class="step">
+      <span class="n">Step 3</span>
+      <div><h3>Add Nominee</h3><p>"I proceed without a nominee" is pre-checked. The user actively chooses to add one — not forced into it. Nominees can be added after folio creation; now users know that.</p><div class="ph short">Step 3 — screen</div></div>
+    </div>
+    <div class="step">
+      <span class="n">Step 4</span>
+      <div><h3>Add Bank Account</h3><p>The original form had six bank fields. Here: type the IFSC and everything resolves — bank name, city, branch, address. The user only confirms account number and type.</p><div class="ph short">Step 4 — screen</div></div>
+    </div>
+    <div class="step">
+      <span class="n">Step 5</span>
+      <div><h3>Invest</h3><p>Scheme selection appears last — because now it makes sense. Folio exists, bank confirmed, nominee decided. Lumpsum vs SIP comes first because it drives different fields. The final CTA is "Review Form" — one moment of confidence before committing real money.</p><div class="ph short">Step 5 — screen</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="prose">
+  <div class="wrap reveal">
+    <span class="sec-label">Outcomes</span>
+    <h2>What changed</h2>
+    <div class="stats">
+      <div class="stat"><b>9→5</b><span>sections into focused steps</span></div>
+      <div class="stat"><b>~60%</b><span>fewer fields visible per screen</span></div>
+      <div class="stat"><b>0</b><span>compliance requirements removed</span></div>
+    </div>
+    <p>Every compliance requirement is still there. What changed is <strong>when and how</strong> they
+    appear — proportionate to the moment, not dumped all at once. Zero structural changes were needed
+    post internal review. The flow held.</p>
+    <p>Post-launch, Microsoft Clarity will track drop-off by step and time-per-screen — measurement the
+    previous version never had. This redesign builds the foundation for that.</p>
+    <h3>What I'd do differently</h3>
+    <p>No user testing before finalising the flow — I relied on my own walkthrough and competitor
+    research. It surfaced real problems, but two or three sessions with actual first-time investors
+    would have been better. As the sole designer, stress-testing assumptions early is the thing I keep
+    learning to do sooner.</p>
+    <ul class="tools">
+      <li>Figma</li><li>User flow mapping</li><li>Competitive audit</li><li>Wireframing</li><li>Prototyping</li>
+    </ul>
+  </div>
+</section>
+
+<div class="wrap cs-nav">
+  <a href="index.html#work"><span class="dir">← Back</span><span class="t">All work</span></a>
+  <a class="next" href="case-study-authenticator.html"><span class="dir">Next case study →</span><span class="t">Authenticator app login</span></a>
+</div>
+<footer>
+  <div class="wrap">
+    <span>© 2026 Harshal Randhire</span>
+    
+    <span class="mono">Designed &amp; hand-coded · no templates</span>
+  </div>
+</footer>
+<script>
+  const root = document.documentElement;
+  const KEY = 'hr-theme';
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function readChoice(){
+    const u = new URLSearchParams(location.search).get('theme');
+    if (u === 'light' || u === 'dark') return u;
+    try { const s = localStorage.getItem(KEY); if (s === 'light' || s === 'dark') return s; } catch(e){}
+    return null;
+  }
+  // Carry the theme into every internal link, so it survives page changes
+  // even if localStorage is unavailable (e.g. strict privacy modes / sandboxed previews).
+  function syncLinks(t){
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || !/\.html(\?|#|$)/.test(href)) return;
+      const hashIdx = href.indexOf('#');
+      const hash = hashIdx > -1 ? href.slice(hashIdx) : '';
+      const base = (hashIdx > -1 ? href.slice(0, hashIdx) : href).split('?')[0];
+      a.setAttribute('href', base + '?theme=' + t + hash);
+    });
+  }
+  function apply(t, persist){
+    root.setAttribute('data-theme', t);
+    if (persist){
+      try { localStorage.setItem(KEY, t); } catch(e){}
+      syncLinks(t);
+    }
+  }
+
+  const choice = readChoice();
+  apply(choice || (prefersDark.matches ? 'dark' : 'light'), !!choice);
+  // Follow system changes only while the user hasn't made an explicit choice
+  prefersDark.addEventListener('change', e => { if (!readChoice()) apply(e.matches ? 'dark' : 'light', false); });
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    apply(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+  });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
